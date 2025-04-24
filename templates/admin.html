@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Admin Panel</h1>
+            <div class="nav">
+                <a href="{{ url_for('dashboard') }}" class="btn">Dashboard</a>
+                <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flashes">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="admin-content">
+            <h2>User Management</h2>
+            
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Admin Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>{% if user[2] %}Admin{% else %}User{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
