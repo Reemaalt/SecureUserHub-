@@ -1,29 +1,32 @@
+```
+
 secure-user-management/
+├── app.js
+├── package.json
+├── package-lock.json
 ├── config/
 │   └── db.js
 ├── routes/
-│   ├── vulnerable.js
-│   └── secure.js
-├── public/
-│   ├── css/
-│   │   └── styles.css
-│   ├── js/
-│   │   ├── vulnerable.js
-│   │   └── secure.js
-│   ├── index.html
-│   ├── vulnerable/
-│   │   ├── register.html
-│   │   ├── login.html
-│   │   └── dashboard.html
-│   └── secure/
-│       ├── register.html
-│       ├── login.html
-│       └── dashboard.html
-├── app.js
-└── package.json
+│   ├── secure.js
+│   └── vulnerable.js
+└── public/
+    ├── css/
+    │   └── styles.css
+    ├── index.html
+    ├── secure/
+    │   ├── admin.html
+    │   ├── dashboard.html
+    │   ├── login.html
+    │   └── register.html
+    └── vulnerable/
+        ├── dashboard.html
+        ├── login.html
+        └── register.html
 
-###  Install Dependencies
+```
 
+### 1. Install Dependencies
+install the whole folder then, 
 Navigate to the project directory and install the dependencies:
 
 ```shellscript
@@ -31,7 +34,7 @@ cd secure-user-management
 npm install
 ```
 
-### 4. Start the Server
+### 2. Start the Server
 
 Start the application:
 
@@ -41,7 +44,7 @@ npm start
 
 The server will start running on [http://localhost:3000](http://localhost:3000).
 
-### 5. Access the Application
+### 3. Access the Application
 
 Open your web browser and navigate to:
 
