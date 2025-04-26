@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure User Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Secure User Management System</h1>
+    
+    <div class="card-container">
+      <div class="card">
+        <h2>Vulnerable Implementation</h2>
+        <p>Contains common security vulnerabilities for demonstration</p>
+        <ul>
+          <li>SQL Injection vulnerabilities</li>
+          <li>Weak password storage (MD5)</li>
+          <li>Cross-Site Scripting (XSS) vulnerabilities</li>
+          <li>Poor access control</li>
+          <li>Insufficient encryption</li>
+        </ul>
+        <a href="/vulnerable/register" class="button">Try Vulnerable Version</a>
+      </div>
+      
+      <div class="card">
+        <h2>Secure Implementation</h2>
+        <p>Implements security best practices and mitigations</p>
+        <ul>
+          <li>Parameterized queries</li>
+          <li>Strong password hashing</li>
+          <li>Input sanitization</li>
+          <li>Role-based access control</li>
+          <li>Proper encryption for sensitive data</li>
+        </ul>
+        <a href="/secure/register" class="button">Try Secure Version</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

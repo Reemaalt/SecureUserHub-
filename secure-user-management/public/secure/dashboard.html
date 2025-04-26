@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard (Secure) - Secure User Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Dashboard (Secure)</h1>
+      <div class="header-buttons">
+        <a href="/secure/admin" id="admin-link" class="button button-outline" style="display: none;">Admin Panel</a>
+        <button id="logout-button" class="button button-outline">Logout</button>
+        <a href="/" class="button">Home</a>
+      </div>
+    </div>
+    
+    <div class="dashboard-grid">
+      <div class="card">
+        <h2>User Profile</h2>
+        <p>Your account information</p>
+        
+        <div class="profile-info">
+          <div class="profile-item">
+            <label>Username</label>
+            <p id="username-display"></p>
+          </div>
+          <div class="profile-item">
+            <label>Role</label>
+            <p id="role-display"></p>
+          </div>
+          <div class="alert alert-success">
+            <span class="icon">✓</span> Proper role-based access control implemented
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h2>Community Comments</h2>
+        <p>Protected against XSS with input sanitization</p>
+        
+        <div class="tabs">
+          <button class="tab-button active" data-tab="comments">Comments</button>
+          <button class="tab-button" data-tab="add-comment">Add Comment</button>
+        </div>
+        
+        <div class="tab-content" id="comments-tab">
+          <div id="comments-container" class="comments-container">
+            <p class="no-comments">Loading comments...</p>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="add-comment-tab" style="display: none;">
+          <form id="comment-form">
+            <div class="form-group">
+              <label for="comment">Your Comment</label>
+              <textarea id="comment" name="comment" required></textarea>
+            </div>
+            <button type="submit" class="button">Post Comment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Security Features</h2>
+      <p>Implemented security measures in this version</p>
+      
+      <div class="security-grid">
+        <div class="security-item">
+          <h3><span class="icon">🔒</span> SQL Injection Protection</h3>
+          <p>Using parameterized queries to prevent SQL injection attacks</p>
+        </div>
+        <div class="security-item">
+          <h3><span class="icon">🔒</span> Secure Password Storage</h3>
+          <p>Using strong hashing with salt for secure password storage</p>
+        </div>
+        <div class="security-item">
+          <h3><span class="icon">🔒</span> XSS Protection</h3>
+          <p>Sanitizing user input to prevent cross-site scripting attacks</p>
+        </div>
+        <div class="security-item">
+          <h3><span class="icon">🔒</span> Role-Based Access Control</h3>
+          <p>Restricting access to sensitive areas based on user roles</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/js/secure.js"></script>
+</body>
+</html>
