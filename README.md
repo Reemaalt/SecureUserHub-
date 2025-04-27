@@ -1,93 +1,103 @@
-```
+# Web Security Demonstration
 
-secure-user-management/
-├── app.js
-├── package.json
-├── package-lock.json
-├── config/
-│   └── db.js
-├── routes/
-│   ├── secure.js
-│   └── vulnerable.js
-└── public/
-    ├── css/
-    │   └── styles.css
-    ├── index.html
-    ├── secure/
-    │   ├── admin.html
-    │   ├── dashboard.html
-    │   ├── login.html
-    │   └── register.html
-    └── vulnerable/
-        ├── dashboard.html
-        ├── login.html
-        └── register.html
+This project demonstrates common web security vulnerabilities and their mitigations. It includes two versions of the same application:
 
-```
+## Vulnerable Version
+The vulnerable version contains intentional security flaws to demonstrate what can go wrong when security best practices are not followed.
 
-### 1. Install Dependencies
-install the whole folder then, 
-Navigate to the project directory and install the dependencies:
+## Secure Version
+The secure version implements proper security measures to mitigate the vulnerabilities present in the vulnerable version.
 
-```shellscript
-cd secure-user-management
-npm install
-```
+## Key Security Features Demonstrated
 
-### 2. Start the Server
+- **Password Storage:** Weak MD5 hashing vs. secure PBKDF2 with salt
+- **XSS Prevention:** Unsanitized content vs. proper content sanitization
+- **Session Management:** Insecure localStorage vs. secure session handling
+- **Access Control:** Weak role verification vs. proper role-based access control
+- **Rate Limiting:** No protection vs. protection against brute force attacks
 
-Start the application:
+## Getting Started
 
-```shellscript
-npm start
-```
+### Prerequisites
+- Node.js (v14 or higher)
 
-The server will start running on [http://localhost:3000](http://localhost:3000).
+### Installation
 
-### 3. Access the Application
+1. Clone the repository or download the files
+2. Install dependencies:
+   \`\`\`
+   npm install
+   \`\`\`
+3. Start the server:
+   \`\`\`
+   npm start
+   \`\`\`
+4. Open your browser and navigate to:
+   \`\`\`
+   http://localhost:3000
+   \`\`\`
 
-Open your web browser and navigate to:
-
-- [http://localhost:3000](http://localhost:3000)
-
-
-From there, you can choose between the vulnerable and secure implementations.
-
-## Testing the Vulnerabilities
-
-### 1. SQL Injection
-
-- Try logging in with username: `admin' --` and any password
-- This bypasses the password check in the vulnerable version
-
-
-### 2. XSS (Cross-Site Scripting)
-
-- In the vulnerable version, post a comment with: `<script>alert('XSS')</script>`
-- The script will execute when viewing comments
-
-
-### 3. Access Control
-
-- In the vulnerable version, any user can access the admin panel by clicking "Admin View"
-- In the secure version, only users with the admin role can access the admin panel
-
-
-### 4. Default Admin Account
+## Default Login
 
 - Username: `admin`
 - Password: `password123`
 
+## Security Vulnerabilities Demonstrated
 
-## Security Features Implemented
+### Vulnerable Version
 
-1. **SQL Injection Protection**: Parameterized queries
-2. **Password Security**: Strong hashing with salt
-3. **XSS Protection**: Input sanitization
-4. **Access Control**: Role-based access control
-5. **Session Management**: Secure sessions with expiration
-6. **Brute Force Protection**: Account lockout after multiple failed attempts
-7. **Input Validation**: Strict validation for usernames and passwords
+1. **Weak Password Storage**
+   - Uses MD5 hashing which is vulnerable to rainbow table attacks
+   - No salt is used, making identical passwords have identical hashes
 
+2. **Cross-Site Scripting (XSS)**
+   - Comments are not sanitized before being displayed
+   - Try posting: `<script>alert("XSS")</script>` in the comments
 
-This application demonstrates both vulnerable and secure implementations side by side, making it easy to understand common web security vulnerabilities and how to mitigate them.
+3. **Insecure Session Management**
+   - Session IDs stored in localStorage (accessible to JavaScript)
+   - No session expiration
+
+4. **Broken Access Controls**
+   - Any authenticated user can access admin functionality
+   - No proper role verification
+
+5. **No Rate Limiting**
+   - No protection against brute force attacks
+   - Unlimited login attempts allowed
+
+### Secure Version
+
+1. **Secure Password Storage**
+   - Uses PBKDF2 with salt for password hashing
+   - Enforces password strength requirements
+
+2. **XSS Prevention**
+   - All user input is sanitized before being displayed
+   - Uses textContent instead of innerHTML
+
+3. **Secure Session Management**
+   - Sessions have expiration times
+   - Better session ID generation
+
+4. **Proper Access Controls**
+   - Server-side verification of user roles
+   - Proper authorization checks
+
+5. **Rate Limiting**
+   - Limits failed login attempts
+   - Implements account lockout after too many failed attempts
+
+## Project Structure
+
+- `index.html` - Main landing page
+- `vulnerable/` - Vulnerable version of the application
+- `secure/` - Secure version of the application
+- `js/` - JavaScript files for client-side functionality
+- `styles.css` - CSS styles for the application
+- `server.js` - Simple Express server with API endpoints
+- `data.json` - File-based storage (created when the server starts)
+
+## Educational Purpose
+
+This project is designed for educational purposes to help understand common web security vulnerabilities and how to mitigate them. Do not use the vulnerable code in production environments.

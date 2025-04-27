@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Security Demonstration</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Web Security Demonstration</h1>
+      <p class="subtitle">This application demonstrates common web security vulnerabilities and their mitigations.</p>
+    </header>
+
+    <div class="card-container">
+      <!-- Vulnerable Version Card -->
+      <div class="card vulnerable">
+        <div class="card-header">
+          <div class="badge vulnerable">
+            <span class="icon">⚠️</span>
+            <span>Vulnerable Version</span>
+          </div>
+          <h2>Vulnerable Implementation</h2>
+          <p>Contains common security flaws for demonstration</p>
+        </div>
+        <div class="card-content">
+          <p>This version demonstrates:</p>
+          <ul>
+            <li>Weak password storage (MD5)</li>
+            <li>Cross-Site Scripting (XSS) vulnerability</li>
+            <li>Insecure session management</li>
+            <li>Broken access controls</li>
+            <li>No rate limiting for login attempts</li>
+          </ul>
+        </div>
+        <div class="card-footer">
+          <a href="vulnerable/login.html" class="button vulnerable">
+            Try Vulnerable Version →
+          </a>
+        </div>
+      </div>
+
+      <!-- Secure Version Card -->
+      <div class="card secure">
+        <div class="card-header">
+          <div class="badge secure">
+            <span class="icon">🛡️</span>
+            <span>Secure Version</span>
+          </div>
+          <h2>Secure Implementation</h2>
+          <p>Implements security best practices</p>
+        </div>
+        <div class="card-content">
+          <p>This version demonstrates:</p>
+          <ul>
+            <li>Secure password hashing (PBKDF2)</li>
+            <li>XSS prevention</li>
+            <li>Secure session management</li>
+            <li>Proper access controls</li>
+            <li>Rate limiting for login attempts</li>
+          </ul>
+        </div>
+        <div class="card-footer">
+          <a href="secure/login.html" class="button secure">
+            Try Secure Version →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="explanation-toggle">
+      <button id="toggle-explanation" class="button outline">Show Project Explanation</button>
+    </div>
+
+    <div id="explanation" class="card explanation" style="display: none;">
+      <div class="card-header">
+        <h2>Project Explanation</h2>
+      </div>
+      <div class="card-content">
+        <p>
+          This project demonstrates common web security vulnerabilities and their mitigations. It includes two
+          versions of the same application:
+        </p>
+
+        <h3>Vulnerable Version:</h3>
+        <p>
+          The vulnerable version contains intentional security flaws to demonstrate what can go wrong when
+          security best practices are not followed.
+        </p>
+
+        <h3>Secure Version:</h3>
+        <p>
+          The secure version implements proper security measures to mitigate the vulnerabilities present in the
+          vulnerable version.
+        </p>
+
+        <h3>Key Security Features Demonstrated:</h3>
+        <ul>
+          <li>
+            <strong>Password Storage:</strong> Weak MD5 hashing vs. secure PBKDF2 with salt
+          </li>
+          <li>
+            <strong>XSS Prevention:</strong> Unsanitized content vs. proper content sanitization
+          </li>
+          <li>
+            <strong>Session Management:</strong> Insecure localStorage vs. secure session handling
+          </li>
+          <li>
+            <strong>Access Control:</strong> Weak role verification vs. proper role-based access control
+          </li>
+          <li>
+            <strong>Rate Limiting:</strong> No protection vs. protection against brute force attacks
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle explanation section
+    document.getElementById('toggle-explanation').addEventListener('click', function() {
+      const explanation = document.getElementById('explanation');
+      const button = document.getElementById('toggle-explanation');
+      
+      if (explanation.style.display === 'none') {
+        explanation.style.display = 'block';
+        button.textContent = 'Hide Project Explanation';
+      } else {
+        explanation.style.display = 'none';
+        button.textContent = 'Show Project Explanation';
+      }
+    });
+  </script>
+</body>
+</html>
