@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "passwordHash": "482c811da5d5b4bc6d497ffa98491e38",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "username": "fmaltwaijri",
+      "passwordHash": "41aff31a983e5a7feaec389d9bfa5ab9:b57e2baa663a601af070dda6d3a98ee8dccbf499f2f4282b1a7b51c4844062e269818994507b7bbc935bf0fb2d93b25a9f00dd160757c0a63a4fae9b7c633c1d",
+      "role": "user"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "username": "admin",
+      "content": "Welcome to our community!"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "content": "&lt;blocked&gt;alert(&quot;XSS&quot;)&lt;/blocked&gt;"
+    },
+    {
+      "id": 3,
+      "username": "admin",
+      "content": "<script>alert(\"XSS\")</script>"
+    }
+  ],
+  "sessions": {
+    "09091662aceefe9169dd4b7f0557c60bbdcd2067c45a514c0c25614cdd0905bb": {
+      "userId": 1,
+      "username": "admin",
+      "role": "admin",
+      "expires": 1745760457450
+    },
+    "ydut604dz5r": {
+      "userId": 1,
+      "username": "admin",
+      "role": "admin"
+    },
+    "61093c8b9a440e7f67e7b9b9d140e1e0f8c55209c123baf34be8251146675355": {
+      "userId": 2,
+      "username": "fmaltwaijri",
+      "role": "user",
+      "expires": 1745760745418
+    }
+  }
+}
