@@ -98,6 +98,3 @@ The secure version implements proper security measures to mitigate the vulnerabi
 - `server.js` - Simple Express server with API endpoints
 - `data.json` - File-based storage (created when the server starts)
 
-## Educational Purpose
-
-This project is designed for educational purposes to help understand common web security vulnerabilities and how to mitigate them. Do not use the vulnerable code in production environments.
