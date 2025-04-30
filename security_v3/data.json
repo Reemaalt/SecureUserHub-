@@ -11,6 +11,12 @@
       "username": "fmaltwaijri",
       "passwordHash": "41aff31a983e5a7feaec389d9bfa5ab9:b57e2baa663a601af070dda6d3a98ee8dccbf499f2f4282b1a7b51c4844062e269818994507b7bbc935bf0fb2d93b25a9f00dd160757c0a63a4fae9b7c633c1d",
       "role": "user"
+    },
+    {
+      "id": 3,
+      "username": "95671",
+      "passwordHash": "ac59a0534090c91451c58a699d118263:2b43d589a0ef0d20887d6ca8b7c4a3d26586f2a177c73fa0a44863a846b7e174ef4ce9f6ac312d8fdc889dcbb4844a00dc4f4047192c59bc03b48df464367bb6",
+      "role": "user"
     }
   ],
   "comments": [
@@ -28,6 +34,16 @@
       "id": 3,
       "username": "admin",
       "content": "<script>alert(\"XSS\")</script>"
+    },
+    {
+      "id": 4,
+      "username": "95671",
+      "content": "hi"
+    },
+    {
+      "id": 5,
+      "username": "95671",
+      "content": "&lt;blocked&gt;alert(&quot;XSS&quot;)&lt;/blocked&gt;"
     }
   ],
   "sessions": {
@@ -47,6 +63,23 @@
       "username": "fmaltwaijri",
       "role": "user",
       "expires": 1745760745418
+    },
+    "z2wy3hjeomf": {
+      "userId": 1,
+      "username": "admin",
+      "role": "admin"
+    },
+    "23a08bee230e940af5710e3ff26e659b9038c82531ef514fb6a9aaf493a55d6a": {
+      "userId": 1,
+      "username": "admin",
+      "role": "admin",
+      "expires": 1745761627570
+    },
+    "4e3750dfaedec51618b3a62ca6ef7ca5ddf113a7c93a1e173eb6efd48cef4c86": {
+      "userId": 3,
+      "username": "95671",
+      "role": "user",
+      "expires": 1745761677404
     }
   }
 }
