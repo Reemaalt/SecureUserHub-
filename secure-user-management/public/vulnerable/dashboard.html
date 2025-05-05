@@ -3,92 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard (Vulnerable) - Secure User Management System</title>
-  <link rel="stylesheet" href="/css/styles.css">
+  <title>Dashboard - Vulnerable Version</title>
+  <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>Dashboard (Vulnerable)</h1>
-      <div class="header-buttons">
-        <button id="admin-view-button" class="button button-outline">Admin View</button>
-        <button id="logout-button" class="button button-outline">Logout</button>
-        <a href="/" class="button">Home</a>
+    <div class="dashboard-header">
+      <div class="badge vulnerable">
+        <span class="icon">⚠️</span>
+        <span>Vulnerable Version</span>
       </div>
+      <button id="logout-button" class="button outline" style="width: auto;">Logout</button>
     </div>
-    
-    <div class="dashboard-grid">
-      <div class="card">
-        <h2>User Profile</h2>
-        <p>Your account information</p>
-        
-        <div class="profile-info">
-          <div class="profile-item">
-            <label>Username</label>
-            <p id="username-display"></p>
-          </div>
-          <div class="profile-item">
-            <label>Role</label>
+
+    <div class="card vulnerable">
+      <div class="card-header">
+        <h2>User Dashboard</h2>
+        <p>Welcome to your dashboard</p>
+      </div>
+      <div class="card-content">
+        <div class="user-info">
+          <div class="avatar vulnerable">👤</div>
+          <div>
+            <h3 id="username-display"></h3>
             <p id="role-display"></p>
           </div>
-          <div class="alert">
-            Weak access control allows any user to access admin views
-          </div>
         </div>
-      </div>
-      
-      <div class="card">
-        <h2>Community Comments</h2>
-        <p>Vulnerable to XSS attacks - try posting: <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code></p>
-        
+
         <div class="tabs">
-          <button class="tab-button active" data-tab="comments">Comments</button>
-          <button class="tab-button" data-tab="add-comment">Add Comment</button>
+          <button class="tab-button vulnerable active" data-tab="profile">Profile</button>
+          <button class="tab-button vulnerable" data-tab="comments">Comments</button>
         </div>
-        
-        <div class="tab-content" id="comments-tab">
-          <div id="comments-container" class="comments-container">
-            <p class="no-comments">Loading comments...</p>
+
+        <div id="profile-tab" class="tab-content active">
+          <h3>Your Profile</h3>
+          <p>This is your user profile. You can view and update your information here.</p>
+          
+          <div style="margin-top: 1.5rem;">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" readonly>
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <input type="text" id="role" readonly>
+            </div>
           </div>
         </div>
-        
-        <div class="tab-content" id="add-comment-tab" style="display: none;">
-          <form id="comment-form">
-            <div class="form-group">
-              <label for="comment">Your Comment</label>
-              <textarea id="comment" name="comment" required></textarea>
-            </div>
-            <button type="submit" class="button">Post Comment</button>
+
+        <div id="comments-tab" class="tab-content">
+          <h3>Comments</h3>
+          
+          <form id="comment-form" class="comment-form">
+            <textarea id="comment" placeholder="Write a comment..."></textarea>
+            <button type="submit" class="button vulnerable">Post Comment</button>
           </form>
+          
+          <div id="comments-container" class="comments-container"></div>
+        </div>
+
+        <div id="settings-tab" class="tab-content">
+          <h3>Settings</h3>
+          <p>Manage your account settings and preferences.</p>
+          
+          <button id="admin-view-button" class="button vulnerable" style="margin-top: 1.5rem;">Admin View</button>
+          
+          <div id="admin-panel" class="admin-panel">
+            <h4>Admin Panel</h4>
+            <p>This is the admin panel. You can manage users and system settings here.</p>
+            
+            <div class="user-list">
+              <h5>User Management</h5>
+              <div class="user-item">User 1: admin (admin)</div>
+              <div class="user-item" id="current-user"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    
-    <div id="admin-panel" class="card" style="display: none;">
-      <h2>Admin Panel</h2>
-      <p>This should only be accessible to administrators</p>
-      
-      <div class="alert alert-danger">
-        Security vulnerability: Any user can access this admin panel due to poor access control
-      </div>
-      
-      <div class="admin-grid">
-        <div class="admin-item">
-          <h3>User Management</h3>
-          <p>Manage user accounts</p>
-        </div>
-        <div class="admin-item">
-          <h3>System Settings</h3>
-          <p>Configure system parameters</p>
-        </div>
-        <div class="admin-item">
-          <h3>Security Logs</h3>
-          <p>View security events</p>
-        </div>
-      </div>
+
+    <div class="notes-box vulnerable">
+      <h3>Security Vulnerability Notes:</h3>
+      <ul>
+        <li>XSS vulnerability in comments (try posting: <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code>)</li>
+        <li>Weak access control for admin panel (any user can access it)</li>
+        <li>Insecure session management using localStorage</li>
+      </ul>
     </div>
   </div>
-  
-  <script src="/js/vulnerable.js"></script>
+
+  <script src="../js/vulnerable.js"></script>
 </body>
 </html>

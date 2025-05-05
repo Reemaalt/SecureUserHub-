@@ -68,12 +68,9 @@
         </div>
       </div>
     </div>
-
-    <div class="explanation-toggle">
-      <button id="toggle-explanation" class="button outline">Show Project Explanation</button>
     </div>
 
-    <div id="explanation" class="card explanation" style="display: none;">
+    <div id="explanation" class="card explanation" >
       <div class="card-header">
         <h2>Project Explanation</h2>
       </div>
@@ -117,20 +114,6 @@
     </div>
   </div>
 
-  <script>
-    // Toggle explanation section
-    document.getElementById('toggle-explanation').addEventListener('click', function() {
-      const explanation = document.getElementById('explanation');
-      const button = document.getElementById('toggle-explanation');
-      
-      if (explanation.style.display === 'none') {
-        explanation.style.display = 'block';
-        button.textContent = 'Hide Project Explanation';
-      } else {
-        explanation.style.display = 'none';
-        button.textContent = 'Show Project Explanation';
-      }
-    });
-  </script>
+
 </body>
 </html>

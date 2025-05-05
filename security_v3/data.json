@@ -80,6 +80,17 @@
       "username": "95671",
       "role": "user",
       "expires": 1745761677404
+    },
+    "26cfc0b6f7633d43bc212d4db6e8c8e0b3db810bf32075591a507b1fec48319c": {
+      "userId": 1,
+      "username": "admin",
+      "role": "admin",
+      "expires": 1746450332216
+    },
+    "06q3zmsg75ns": {
+      "userId": 1,
+      "username": "admin",
+      "role": "admin"
     }
   }
 }
