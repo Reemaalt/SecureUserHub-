@@ -321,7 +321,7 @@ if (document.getElementById("logout-button") && !document.getElementById("admin-
     localStorage.removeItem("secureSessionId")
     localStorage.removeItem("secureUsername")
     localStorage.removeItem("secureRole")
-    window.location.href = "../index.html"
+    window.location.href = "index.html"
   })
 }
 
