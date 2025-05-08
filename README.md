@@ -23,14 +23,14 @@ The secure version implements proper security measures to mitigate the vulnerabi
 
 ### Installation
 
-1. Clone the repository or download the files
+1. download the files
 2. Install dependencies:
    \`\`\`
-   npm install
+  -------------
    \`\`\`
 3. Start the server:
    \`\`\`
-   npm start
+  -----------
    \`\`\`
 4. Open your browser and navigate to:
    \`\`\`
@@ -42,6 +42,9 @@ The secure version implements proper security measures to mitigate the vulnerabi
 - Username: `admin`
 - Password: `password123`
 
+- Username: `user1`
+- Password: `password123456`
+
 ## Security Vulnerabilities Demonstrated
 
 ### Vulnerable Version
@@ -52,7 +55,7 @@ The secure version implements proper security measures to mitigate the vulnerabi
 
 2. **Cross-Site Scripting (XSS)**
    - Comments are not sanitized before being displayed
-   - Try posting: `<script>alert("XSS")</script>` in the comments
+   - Try posting: `----------` in the comments
 
 3. **Insecure Session Management**
    - Session IDs stored in localStorage (accessible to JavaScript)
@@ -90,11 +93,6 @@ The secure version implements proper security measures to mitigate the vulnerabi
 
 ## Project Structure
 
-- `index.html` - Main landing page
-- `vulnerable/` - Vulnerable version of the application
-- `secure/` - Secure version of the application
-- `js/` - JavaScript files for client-side functionality
-- `styles.css` - CSS styles for the application
+- `index.html` - Main landing page with  Vulnerable version of the application and  Secure version of the application both with  JavaScript functions for client-side functionality
 - `server.js` - Simple Express server with API endpoints
-- `data.json` - File-based storage (created when the server starts)
 
