@@ -44,7 +44,10 @@ function initializeDatabase() {
     FOREIGN KEY (user_id) REFERENCES users (id)
   )`);
 
-  const adminPasswordHash = crypto.createHash("md5").update("password123").digest("hex");
+      // For secure mode, use PBKDF2 with salt for admin password
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.pbkdf2Sync("password123@", salt, 1000, 64, "sha512").toString("hex");
+  const adminPasswordHash = `${salt}:${hash}`;
 
   db.get("SELECT * FROM users WHERE username = 'admin'", (err, row) => {
     if (!row) {
@@ -60,6 +63,42 @@ function initializeDatabase() {
     }
   });
 }
+
+// endpoint to get all users (for admin panel) secure mode
+app.get("/api/secure/admin/users", (req, res) => {
+  const { sessionId } = req.query;
+  
+  if (!sessionId) {
+    return res.status(400).json({ success: false, message: "Missing session ID" });
+  }
+
+  db.get("SELECT * FROM sessions WHERE session_id = ?", [sessionId], (err, session) => {
+    if (err || !session || session.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+
+    db.all("SELECT id, username, role FROM users", (err, users) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: "Failed to load users" });
+      }
+      res.json({ success: true, users });
+    });
+  });
+});
+
+
+
+// Add a similar fix for the vulnerable endpoint for learning purposes
+app.get("/api/vulnerable/admin-check", (req, res) => {
+  const { sessionId } = req.query;
+  db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
+    if (!session) return res.status(401).json({ success: false, message: "Invalid session" });
+    res.json({ success: true, isAdmin: session.role === "admin" });
+  });
+});
+
+  
+
 
 // ========== VULNERABLE ENDPOINTS ==========
 app.post("/api/vulnerable/register", (req, res) => {
@@ -236,14 +275,17 @@ app.get("/api/secure/comments", (req, res) => {
   });
 });
 
+// admin-check endpoint to properly check role
 app.get("/api/secure/admin-check", (req, res) => {
   const { sessionId } = req.query;
   db.get("SELECT * FROM sessions WHERE session_id = ?", [sessionId], (err, session) => {
-    if (!session || session.expires < Date.now()) return res.status(401).json({ success: false, message: "Invalid" });
+    if (!session || session.expires < Date.now()) {
+      return res.status(401).json({ success: false, message: "Invalid session" });
+    }
     res.json({ success: true, isAdmin: session.role === "admin" });
   });
 });
-// update User Role Endpoint
+ //role endpoint to properly check permissions
 app.post("/api/secure/admin/update-role", (req, res) => {
   const { sessionId, userId, newRole } = req.body;
 
@@ -252,7 +294,11 @@ app.post("/api/secure/admin/update-role", (req, res) => {
   }
 
   db.get("SELECT * FROM sessions WHERE session_id = ?", [sessionId], (err, session) => {
-    if (err || !session || session.role !== "admin") {
+    if (err || !session || session.expires < Date.now()) {
+      return res.status(401).json({ success: false, message: "Invalid session" });
+    }
+    
+    if (session.role !== "admin") {
       return res.status(403).json({ success: false, message: "Unauthorized" });
     }
 
@@ -262,7 +308,8 @@ app.post("/api/secure/admin/update-role", (req, res) => {
     });
   });
 });
-// Delete user
+
+//the delete-user endpoint to properly check permissions
 app.post("/api/secure/admin/delete-user", (req, res) => {
   const { sessionId, userId } = req.body;
 
@@ -271,17 +318,24 @@ app.post("/api/secure/admin/delete-user", (req, res) => {
   }
 
   db.get("SELECT * FROM sessions WHERE session_id = ?", [sessionId], (err, session) => {
-    if (err || !session || session.role !== "admin") {
+    if (err || !session || session.expires < Date.now()) {
+      return res.status(401).json({ success: false, message: "Invalid session" });
+    }
+    
+    if (session.role !== "admin") {
       return res.status(403).json({ success: false, message: "Unauthorized" });
     }
 
     db.run("DELETE FROM users WHERE id = ?", [userId], (err) => {
       if (err) return res.status(500).json({ success: false, message: "Failed to delete user" });
+      
+      // Also delete related sessions
+      db.run("DELETE FROM sessions WHERE user_id = ?", [userId]);
+      
       res.json({ success: true, message: "User deleted" });
     });
   });
 });
-
 
   // Auto-clean expired sessions
   setInterval(() => {
