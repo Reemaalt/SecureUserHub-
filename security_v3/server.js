@@ -122,17 +122,15 @@ app.post("/api/vulnerable/login", (req, res) => {
       return res.status(400).json({ success: false, message: "Missing credentials" });
     }
 
-    const query = `SELECT * FROM users WHERE username = '${username}'`;
+    // Hash password for query (will be ignored in SQLi bypass)
+    const passwordHash = crypto.createHash("md5").update(password).digest("hex");
+
+    // Vulnerable query with string interpolation
+    const query = `SELECT * FROM users WHERE username = '${username}' AND password_hash = '${passwordHash}'`;
 
     db.get(query, (err, user) => {
       if (err || !user) {
         return res.status(401).json({ success: false, message: "Invalid login" });
-      }
-
-      const passwordHash = crypto.createHash("md5").update(password).digest("hex");
-
-      if (passwordHash !== user.password_hash) {
-        return res.status(401).json({ success: false, message: "Wrong password" });
       }
 
       const sessionId = Math.random().toString(36).substring(2);
