@@ -3,117 +3,456 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Security Demonstration</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Security Demo Application</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .hidden {
+      display: none;
+    }
+    .comment-content {
+      word-break: break-word;
+    }
+  </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Web Security Demonstration</h1>
-      <p class="subtitle">This application demonstrates common web security vulnerabilities and their mitigations.</p>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-center mb-2">Security Demo Application</h1>
+      <div class="flex justify-center space-x-4">
+        <button id="toggleSecureBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+          Toggle Secure/Vulnerable Mode
+        </button>
+        <span id="modeIndicator" class="px-4 py-2 bg-red-500 text-white rounded">
+          VULNERABLE MODE
+        </span>
+      </div>
     </header>
 
-    <div class="card-container">
-      <!-- Vulnerable Version Card -->
-      <div class="card vulnerable">
-        <div class="card-header">
-          <div class="badge vulnerable">
-            <span class="icon">⚠️</span>
-            <span>Vulnerable Version</span>
-          </div>
-          <h2>Vulnerable Implementation</h2>
-          <p>Contains common security flaws for demonstration</p>
-        </div>
-        <div class="card-content">
-          <p>This version demonstrates:</p>
-          <ul>
-            <li>Weak password storage (MD5)</li>
-            <li>Cross-Site Scripting (XSS) vulnerability</li>
-            <li>Insecure session management</li>
-            <li>Broken access controls</li>
-            <li>No rate limiting for login attempts</li>
-          </ul>
-        </div>
-        <div class="card-footer">
-          <a href="vulnerable/login.html" class="button vulnerable">
-            Try Vulnerable Version →
-          </a>
-        </div>
+    <!-- Auth Forms -->
+    <div id="authForms" class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="flex">
+        <button id="loginTabBtn" class="flex-1 py-2 text-center bg-gray-200 font-medium">Login</button>
+        <button id="registerTabBtn" class="flex-1 py-2 text-center font-medium">Register</button>
       </div>
+      
+      <!-- Login Form -->
+      <form id="loginForm" class="p-6">
+        <h2 class="text-xl font-semibold mb-4">Login</h2>
+        <div class="mb-4">
+          <label for="loginUsername" class="block text-gray-700 mb-2">Username</label>
+          <input type="text" id="loginUsername" class="w-full px-3 py-2 border rounded" required>
+        </div>
+        <div class="mb-4">
+          <label for="loginPassword" class="block text-gray-700 mb-2">Password</label>
+          <input type="password" id="loginPassword" class="w-full px-3 py-2 border rounded" required>
+        </div>
+        <div id="loginError" class="text-red-500 mb-4 hidden"></div>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+          Login
+        </button>
+      </form>
+      
+      <!-- Register Form -->
+      <form id="registerForm" class="p-6 hidden">
+        <h2 class="text-xl font-semibold mb-4">Register</h2>
+        <div class="mb-4">
+          <label for="registerUsername" class="block text-gray-700 mb-2">Username</label>
+          <input type="text" id="registerUsername" class="w-full px-3 py-2 border rounded" required>
+        </div>
+        <div class="mb-4">
+          <label for="registerPassword" class="block text-gray-700 mb-2">Password</label>
+          <input type="password" id="registerPassword" class="w-full px-3 py-2 border rounded" required>
+          <p id="passwordRequirements" class="text-sm text-gray-500 mt-1 hidden">
+            Password must be at least 8 characters and include uppercase, lowercase, number, and special character.
+          </p>
+        </div>
+        <div id="registerError" class="text-red-500 mb-4 hidden"></div>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+          Register
+        </button>
+      </form>
+    </div>
 
-      <!-- Secure Version Card -->
-      <div class="card secure">
-        <div class="card-header">
-          <div class="badge secure">
-            <span class="icon">🛡️</span>
-            <span>Secure Version</span>
+    <!-- Dashboard -->
+    <div id="dashboard" class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden mb-8 hidden">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold">Welcome, <span id="usernameDisplay"></span>!</h2>
+          <div>
+            <span id="roleDisplay" class="px-3 py-1 rounded text-white mr-2"></span>
+            <button id="logoutBtn" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+              Logout
+            </button>
           </div>
-          <h2>Secure Implementation</h2>
-          <p>Implements security best practices</p>
         </div>
-        <div class="card-content">
-          <p>This version demonstrates:</p>
-          <ul>
-            <li>Secure password hashing (PBKDF2)</li>
-            <li>XSS prevention</li>
-            <li>Secure session management</li>
-            <li>Proper access controls</li>
-            <li>Rate limiting for login attempts</li>
-          </ul>
+        
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="mb-8 hidden">
+          <h3 class="text-lg font-medium mb-4">Admin Panel</h3>
+          <div class="bg-gray-100 p-4 rounded">
+            <h4 class="font-medium mb-2">User Management</h4>
+            <div id="usersList" class="overflow-x-auto">
+              <table class="min-w-full bg-white">
+                <thead>
+                  <tr>
+                    <th class="py-2 px-4 border-b text-left">ID</th>
+                    <th class="py-2 px-4 border-b text-left">Username</th>
+                    <th class="py-2 px-4 border-b text-left">Role</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="card-footer">
-          <a href="secure/login.html" class="button secure">
-            Try Secure Version →
-          </a>
+        
+        <!-- Comments Section -->
+        <div class="mb-6">
+          <h3 class="text-lg font-medium mb-4">Comments</h3>
+          <form id="commentForm" class="mb-4">
+            <div class="mb-2">
+              <textarea id="commentContent" class="w-full px-3 py-2 border rounded" rows="3" placeholder="Write a comment..." required></textarea>
+            </div>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+              Post Comment
+            </button>
+          </form>
+          <div id="commentsList" class="space-y-4"></div>
         </div>
       </div>
     </div>
-    </div>
 
-    <div id="explanation" class="card explanation" >
-      <div class="card-header">
-        <h2>Project Explanation</h2>
-      </div>
-      <div class="card-content">
-        <p>
-          This project demonstrates common web security vulnerabilities and their mitigations. It includes two
-          versions of the same application:
-        </p>
-
-        <h3>Vulnerable Version:</h3>
-        <p>
-          The vulnerable version contains intentional security flaws to demonstrate what can go wrong when
-          security best practices are not followed.
-        </p>
-
-        <h3>Secure Version:</h3>
-        <p>
-          The secure version implements proper security measures to mitigate the vulnerabilities present in the
-          vulnerable version.
-        </p>
-
-        <h3>Key Security Features Demonstrated:</h3>
-        <ul>
-          <li>
-            <strong>Password Storage:</strong> Weak MD5 hashing vs. secure PBKDF2 with salt
-          </li>
-          <li>
-            <strong>XSS Prevention:</strong> Unsanitized content vs. proper content sanitization
-          </li>
-          <li>
-            <strong>Session Management:</strong> Insecure localStorage vs. secure session handling
-          </li>
-          <li>
-            <strong>Access Control:</strong> Weak role verification vs. proper role-based access control
-          </li>
-          <li>
-            <strong>Rate Limiting:</strong> No protection vs. protection against brute force attacks
-          </li>
-        </ul>
+    <!-- Security Explanation -->
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-xl font-semibold mb-4">Security Vulnerabilities & Mitigations</h2>
+        
+        <div class="mb-4">
+          <h3 class="font-medium text-lg mb-2">1. SQL Injection</h3>
+          <p class="mb-2"><strong>Vulnerable:</strong> Direct string interpolation in queries</p>
+          <p><strong>Secure:</strong> Parameterized queries</p>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-medium text-lg mb-2">2. Weak Password Storage</h3>
+          <p class="mb-2"><strong>Vulnerable:</strong> MD5 hashing (insecure)</p>
+          <p><strong>Secure:</strong> PBKDF2 with salt</p>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-medium text-lg mb-2">3. Cross-Site Scripting (XSS)</h3>
+          <p class="mb-2"><strong>Vulnerable:</strong> No content sanitization in comments</p>
+          <p><strong>Secure:</strong> HTML entity encoding and keyword filtering</p>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-medium text-lg mb-2">4. Access Control</h3>
+          <p class="mb-2"><strong>Vulnerable:</strong> Admin check always returns true</p>
+          <p><strong>Secure:</strong> Proper role-based access control</p>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-medium text-lg mb-2">5. Encryption</h3>
+          <p class="mb-2"><strong>Vulnerable:</strong> Weak session management</p>
+          <p><strong>Secure:</strong> Proper session expiration, secure token generation</p>
+        </div>
       </div>
     </div>
   </div>
 
+  <script>
+    // Global variables
+    let isSecureMode = false;
+    let currentUser = null;
+    let sessionId = null;
 
+    // DOM Elements
+    const toggleSecureBtn = document.getElementById('toggleSecureBtn');
+    const modeIndicator = document.getElementById('modeIndicator');
+    const loginTabBtn = document.getElementById('loginTabBtn');
+    const registerTabBtn = document.getElementById('registerTabBtn');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginError = document.getElementById('loginError');
+    const registerError = document.getElementById('registerError');
+    const dashboard = document.getElementById('dashboard');
+    const authForms = document.getElementById('authForms');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    const roleDisplay = document.getElementById('roleDisplay');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const adminPanel = document.getElementById('adminPanel');
+    const usersTableBody = document.getElementById('usersTableBody');
+    const commentForm = document.getElementById('commentForm');
+    const commentContent = document.getElementById('commentContent');
+    const commentsList = document.getElementById('commentsList');
+    const passwordRequirements = document.getElementById('passwordRequirements');
+
+    // Toggle between secure and vulnerable mode
+    toggleSecureBtn.addEventListener('click', () => {
+      isSecureMode = !isSecureMode;
+      if (isSecureMode) {
+        modeIndicator.textContent = 'SECURE MODE';
+        modeIndicator.classList.remove('bg-red-500');
+        modeIndicator.classList.add('bg-green-500');
+        passwordRequirements.classList.remove('hidden');
+      } else {
+        modeIndicator.textContent = 'VULNERABLE MODE';
+        modeIndicator.classList.remove('bg-green-500');
+        modeIndicator.classList.add('bg-red-500');
+        passwordRequirements.classList.add('hidden');
+      }
+    });
+
+    // Tab switching
+    loginTabBtn.addEventListener('click', () => {
+      loginTabBtn.classList.add('bg-gray-200');
+      registerTabBtn.classList.remove('bg-gray-200');
+      loginForm.classList.remove('hidden');
+      registerForm.classList.add('hidden');
+    });
+
+    registerTabBtn.addEventListener('click', () => {
+      registerTabBtn.classList.add('bg-gray-200');
+      loginTabBtn.classList.remove('bg-gray-200');
+      registerForm.classList.remove('hidden');
+      loginForm.classList.add('hidden');
+    });
+
+    // Login form submission
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      try {
+        const endpoint = isSecureMode ? '/api/secure/login' : '/api/vulnerable/login';
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          currentUser = {
+            username: data.username,
+            role: data.role,
+          };
+          sessionId = data.sessionId;
+          
+          // Update UI
+          usernameDisplay.textContent = currentUser.username;
+          roleDisplay.textContent = currentUser.role.toUpperCase();
+          
+          if (currentUser.role === 'admin') {
+            roleDisplay.classList.add('bg-purple-500');
+          } else {
+            roleDisplay.classList.add('bg-blue-500');
+          }
+          
+          // Show dashboard, hide auth forms
+          dashboard.classList.remove('hidden');
+          authForms.classList.add('hidden');
+          
+          // Check admin access and load comments
+          checkAdminAccess();
+          loadComments();
+        } else {
+          loginError.textContent = data.message;
+          loginError.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        loginError.textContent = 'An error occurred during login.';
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    // Register form submission
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('registerUsername').value;
+      const password = document.getElementById('registerPassword').value;
+      
+      try {
+        const endpoint = isSecureMode ? '/api/secure/register' : '/api/vulnerable/register';
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          currentUser = {
+            username: data.username,
+            role: data.role,
+          };
+          sessionId = data.sessionId;
+          
+          // Update UI
+          usernameDisplay.textContent = currentUser.username;
+          roleDisplay.textContent = currentUser.role.toUpperCase();
+          roleDisplay.classList.add('bg-blue-500');
+          
+          // Show dashboard, hide auth forms
+          dashboard.classList.remove('hidden');
+          authForms.classList.add('hidden');
+          
+          // Load comments
+          loadComments();
+        } else {
+          registerError.textContent = data.message;
+          registerError.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        registerError.textContent = 'An error occurred during registration.';
+        registerError.classList.remove('hidden');
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      currentUser = null;
+      sessionId = null;
+      
+      // Reset UI
+      dashboard.classList.add('hidden');
+      authForms.classList.remove('hidden');
+      adminPanel.classList.add('hidden');
+      commentsList.innerHTML = '';
+      
+      // Clear forms
+      loginForm.reset();
+      registerForm.reset();
+      loginError.classList.add('hidden');
+      registerError.classList.add('hidden');
+    });
+
+    // Check admin access
+    async function checkAdminAccess() {
+      if (!sessionId) return;
+      
+      try {
+        const endpoint = isSecureMode ? '/api/secure/admin-check' : '/api/vulnerable/admin-check';
+        const response = await fetch(`${endpoint}?sessionId=${sessionId}`);
+        const data = await response.json();
+        
+        if (data.success && data.isAdmin) {
+          adminPanel.classList.remove('hidden');
+          loadUsers();
+        } else {
+          adminPanel.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('Admin check error:', error);
+      }
+    }
+
+    // Load users (admin only)
+    async function loadUsers() {
+      if (!sessionId) return;
+      
+      try {
+        const response = await fetch(`/api/secure/admin/users?sessionId=${sessionId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          usersTableBody.innerHTML = '';
+          
+          data.users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="py-2 px-4 border-b">${user.id}</td>
+              <td class="py-2 px-4 border-b">${user.username}</td>
+              <td class="py-2 px-4 border-b">${user.role}</td>
+            `;
+            usersTableBody.appendChild(row);
+          });
+        }
+      } catch (error) {
+        console.error('Load users error:', error);
+      }
+    }
+
+    // Load comments
+    async function loadComments() {
+      try {
+        const endpoint = isSecureMode ? '/api/secure/comments' : '/api/vulnerable/comments';
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        
+        if (data.success) {
+          commentsList.innerHTML = '';
+          
+          data.comments.forEach(comment => {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'p-4 bg-gray-100 rounded';
+            commentElement.innerHTML = `
+              <div class="flex justify-between items-start mb-2">
+                <span class="font-medium">${comment.username}</span>
+                <span class="text-sm text-gray-500">${new Date(comment.created_at).toLocaleString()}</span>
+              </div>
+              <div class="comment-content">${comment.content}</div>
+            `;
+            commentsList.appendChild(commentElement);
+          });
+        }
+      } catch (error) {
+        console.error('Load comments error:', error);
+      }
+    }
+
+    // Post comment
+    commentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!sessionId) {
+        alert('You must be logged in to post comments.');
+        return;
+      }
+      
+      const content = commentContent.value;
+      
+      try {
+        const endpoint = isSecureMode ? '/api/secure/comments' : '/api/vulnerable/comments';
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ sessionId, content }),
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Clear form
+          commentContent.value = '';
+          
+          // Add new comment to list
+          const commentElement = document.createElement('div');
+          commentElement.className = 'p-4 bg-gray-100 rounded';
+          commentElement.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+              <span class="font-medium">${data.comment.username}</span>
+              <span class="text-sm text-gray-500">Just now</span>
+            </div>
+            <div class="comment-content">${data.comment.content}</div>
+          `;
+          commentsList.prepend(commentElement);
+        }
+      } catch (error) {
+        console.error('Post comment error:', error);
+      }
+    });
+  </script>
 </body>
 </html>
