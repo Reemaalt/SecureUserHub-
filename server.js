@@ -101,6 +101,7 @@ app.get("/api/vulnerable/admin-check", (req, res) => {
 
 
 // ========== VULNERABLE ENDPOINTS ==========
+
 app.post("/api/vulnerable/register", (req, res) => {
   const { username, password } = req.body;
   const passwordHash = crypto.createHash("md5").update(password).digest("hex");
@@ -161,14 +162,108 @@ app.get("/api/vulnerable/comments", (req, res) => {
   });
 });
 
-app.get("/api/vulnerable/admin-check", (req, res) => {
+// endpoint for the vulnerable version (view-only)
+// Vulnerable endpoint to get all users with SQL injection vulnerability
+app.get("/api/vulnerable/admin/users", (req, res) => {
   const { sessionId } = req.query;
-  db.get("SELECT * FROM sessions WHERE session_id = ?", [sessionId], (err, session) => {
-    if (session) return res.json({ success: true, isAdmin: true });
-    res.status(401).json({ success: false, message: "Invalid session" });
+  
+  if (!sessionId) {
+    return res.status(400).json({ success: false, message: "Missing session ID" });
+  }
+
+  // In vulnerable mode, we use string concatenation instead of parameterized queries
+  // This creates an SQL injection vulnerability
+  db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
+    if (!session) {
+      return res.status(401).json({ success: false, message: "Invalid session" });
+    }
+
+    // Notice we don't verify if session.role === "admin" in vulnerable mode
+    // This is a security vulnerability - any authenticated user can see all users
+    db.all("SELECT id, username, role FROM users", (err, users) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: "Failed to load users" });
+      }
+      res.json({ success: true, users });
+    });
   });
 });
 
+// Vulnerable endpoint to delete a user with no proper role check
+app.post("/api/vulnerable/admin/delete-user", (req, res) => {
+  const { sessionId, userId } = req.body;
+
+  if (!sessionId || !userId) {
+    return res.status(400).json({ success: false, message: "Missing data" });
+  }
+
+  // Vulnerable version doesn't properly validate user roles
+  // This allows any authenticated user to delete users if they have the endpoint URL
+  db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
+    if (!session) {
+      return res.status(401).json({ success: false, message: "Invalid session" });
+    }
+    
+    //  We're not checking if the user is actually an admin
+    
+   
+    // This is an SQL injection vulnerability too !
+    db.run(`DELETE FROM users WHERE id = ${userId}`, (err) => {
+      if (err) return res.status(500).json({ success: false, message: "Failed to delete user" });
+      
+      // Also delete related sessions
+      db.run(`DELETE FROM sessions WHERE user_id = ${userId}`);
+      
+      res.json({ success: true, message: "User deleted" });
+    });
+  });
+});
+
+//  update a user's role with no proper role check
+app.post("/api/vulnerable/admin/update-role", (req, res) => {
+  const { sessionId, userId, newRole } = req.body;
+
+  if (!sessionId || !userId || !newRole) {
+    return res.status(400).json({ success: false, message: "Missing data" });
+  }
+
+  // any authenticated user can change roles if they have the endpoint URL
+  db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
+    if (!session) {
+      return res.status(401).json({ success: false, message: "Invalid session" });
+    }
+    
+    // We're not checking if the user is actually an admin !
+    
+    //SQL injection
+    db.run(`UPDATE users SET role = '${newRole}' WHERE id = ${userId}`, (err) => {
+      if (err) return res.status(500).json({ success: false, message: "Failed to update role" });
+      res.json({ success: true, message: "User role updated" });
+    });
+  });
+});
+
+// vulnerable admin-check endpoint
+app.get("/api/vulnerable/admin-check", (req, res) => {
+  const { sessionId } = req.query;
+  db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
+    if (!session) return res.status(401).json({ success: false, message: "Invalid session" });
+    
+    // check the role is admin, but still has SQL injection vulnerability
+    res.json({ success: true, isAdmin: session.role === "admin" });
+  });
+});
+
+//  vulnerable admin-check endpoint
+app.get("/api/vulnerable/admin-check", (req, res) => {
+  const { sessionId } = req.query;
+  db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
+    if (!session) return res.status(401).json({ success: false, message: "Invalid session" });
+    
+    // Vulnerable version - incorrectly allows any user with valid session to be recognized as admin
+    res.json({ success: true, isAdmin: session.role === "admin" });
+  });
+});
 // ========== SECURE ENDPOINTS ==========
 
 const loginAttempts = {};
