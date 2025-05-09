@@ -42,7 +42,7 @@ This project is focused on implementing secure and vulnerable endpoints using No
 * Username: `admin`
 * Password: `password123@`
 
-## Security Vulnerabilities Demonstrated
+## Security Vulnerabilities Demonstrated 
 
 1. **SQL Injection Test**
 
