@@ -65,3 +65,4 @@ This project is focused on implementing secure and vulnerable endpoints using No
 
 * `index.html` - Main landing page containing both the vulnerable and secure versions of the application, with JavaScript functions for client-side functionality.
 * `server.js` - Simple Express server with API endpoints.
+* `encryptingmy.js ` - hold the encryption and decryption functions with the key initialization 
