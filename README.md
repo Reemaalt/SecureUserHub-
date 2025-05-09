@@ -1,12 +1,5 @@
-# Web Security Demonstration
-
-This project demonstrates common web security vulnerabilities and their mitigations. It includes two versions of the same application:
-
-## Vulnerable Version
-The vulnerable version contains intentional security flaws to demonstrate what can go wrong when security best practices are not followed.
-
-## Secure Version
-The secure version implements proper security measures to mitigate the vulnerabilities present in the vulnerable version.
+# Overview
+This project is focused on implementing secure and vulnerable endpoints using Node.js, Express, and SQLite. The main goal is to demonstrate common web vulnerabilities and how to mitigate them, such as SQL injection and Cross-Site Scripting (XSS).
 
 ## Key Security Features Demonstrated
 
@@ -19,78 +12,43 @@ The secure version implements proper security measures to mitigate the vulnerabi
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
+-Node.js (v18+)
+
 
 ### Installation
-
-1. download the files
+1. download the files (index.html /server.js /encryptingmy.js)
 2. Install dependencies:
    \`\`\`
-  -------------
+npm install express body-parser sqlite3 cookie-parser
    \`\`\`
 3. Start the server:
    \`\`\`
-  -----------
+   node server.js
    \`\`\`
 4. Open your browser and navigate to:
    \`\`\`
    http://localhost:3000
    \`\`\`
 
-## Default Login
+## Default Login is our admin 
 
 - Username: `admin`
-- Password: `password123`
-
-- Username: `user1`
-- Password: `password123456`
+- Password: `password123@`
 
 ## Security Vulnerabilities Demonstrated
-
-### Vulnerable Version
-
-1. **Weak Password Storage**
-   - Uses MD5 hashing which is vulnerable to rainbow table attacks
-   - No salt is used, making identical passwords have identical hashes
-
-2. **Cross-Site Scripting (XSS)**
-   - Comments are not sanitized before being displayed
-   - Try posting: `----------` in the comments
-
-3. **Insecure Session Management**
-   - Session IDs stored in localStorage (accessible to JavaScript)
-   - No session expiration
-
-4. **Broken Access Controls**
-   - Any authenticated user can access admin functionality
-   - No proper role verification
-
-5. **No Rate Limiting**
-   - No protection against brute force attacks
-   - Unlimited login attempts allowed
-
-### Secure Version
-
-1. **Secure Password Storage**
-   - Uses PBKDF2 with salt for password hashing
-   - Enforces password strength requirements
-
-2. **XSS Prevention**
-   - All user input is sanitized before being displayed
-   - Uses textContent instead of innerHTML
-
-3. **Secure Session Management**
-   - Sessions have expiration times
-   - Better session ID generation
-
-4. **Proper Access Controls**
-   - Server-side verification of user roles
-   - Proper authorization checks
-
-5. **Rate Limiting**
-   - Limits failed login attempts
-   - Implements account lockout after too many failed attempts
-
+1. SQL Injection Test
+try login with
+  \`\`\`
+user: admin'--
+password:  anything 
+   \`\`\`
+   
+3. XSS Test
+post a comnt with 
+   \`\`\`
+<img src=x onerror=alert(1)>
+   \`\`\`
+   
 ## Project Structure
 
 - `index.html` - Main landing page with  Vulnerable version of the application and  Secure version of the application both with  JavaScript functions for client-side functionality
