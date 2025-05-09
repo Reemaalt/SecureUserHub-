@@ -43,12 +43,12 @@ function initializeDatabase() {
     expires BIGINT,
     FOREIGN KEY (user_id) REFERENCES users (id)
   )`);
-
+  
       // For secure mode, use PBKDF2 with salt for admin password
   const salt = crypto.randomBytes(16).toString("hex");
   const hash = crypto.pbkdf2Sync("password123@", salt, 1000, 64, "sha512").toString("hex");
   const adminPasswordHash = `${salt}:${hash}`;
-
+    
   db.get("SELECT * FROM users WHERE username = 'admin'", (err, row) => {
     if (!row) {
       db.run(
@@ -63,8 +63,25 @@ function initializeDatabase() {
     }
   });
 }
+/*if vulnerable
+const adminPasswordHash = crypto.createHash("md5").update("password123").digest("hex");
 
+  db.get("SELECT * FROM users WHERE username = 'admin'", (err, row) => {
+    if (!row) {
+      db.run(
+        `INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)`,
+        ["admin", adminPasswordHash, "admin"],
+        function (err) {
+          if (!err) {
+            console.log("Admin user created with ID:", this.lastID);
+          }
+        }
+      );
+    }
+  });
+}  */
 // endpoint to get all users (for admin panel) secure mode
+
 app.get("/api/secure/admin/users", (req, res) => {
   const { sessionId } = req.query;
   
@@ -88,9 +105,10 @@ app.get("/api/secure/admin/users", (req, res) => {
 
 
 
-// Add a similar fix for the vulnerable endpoint for learning purposes
+//  vulnerable endpoint 
 app.get("/api/vulnerable/admin-check", (req, res) => {
   const { sessionId } = req.query;
+ 
   db.get(`SELECT * FROM sessions WHERE session_id = '${sessionId}'`, (err, session) => {
     if (!session) return res.status(401).json({ success: false, message: "Invalid session" });
     res.json({ success: true, isAdmin: session.role === "admin" });
